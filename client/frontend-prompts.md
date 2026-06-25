@@ -84,7 +84,7 @@ Build the login and register pages:
 
 - /login — email + password, calls POST /login, stores token + user, redirects based on role
   (admin -> /admin/dashboard, member -> /member/dashboard).
-- /register — name, email, password, phone, calls POST /register (always creates a member),
+- /register — name, email, password, national_id (national ID card number), phone (optional), calls POST /register (always creates a member),
   logs them in, redirects to /member/dashboard.
 
 Use shadcn/ui form components, basic client-side validation (required fields, valid email
@@ -111,11 +111,11 @@ Use shadcn/ui Table, Dialog, Button, and Input components.
 
 ```
 Build an admin page at /admin/members:
-- Table listing all members (name, email, phone, an Active/Expired status badge) from
+- Table listing all members (name, email, national_id, phone, an Active/Expired status badge) from
   GET /api/members.
 - A search input and a status filter (All/Active/Expired) that pass ?search= and ?status=
   query params to the API.
-- "Add member" button -> Dialog with a form (name, email, password, phone) -> POST /api/members.
+- "Add member" button -> Dialog with a form (name, email, password, national_id, phone) -> POST /api/members.
 - Edit and delete actions per row.
 - Clicking a row opens a detail view (drawer or separate page) showing that member's
   subscriptions, payments, and checkins, from GET /api/members/{id}.

@@ -3,8 +3,9 @@
 A generic membership-management REST API (works for any membership-based business — gym, club, library, etc.). Two roles: **admin** (manages everything) and **member** (manages only their own data).
 
 **Final schema (6 tables):**
+
 1. `users` — login/auth for both roles (`role` column: `admin` or `member`)
-2. `members` — profile data for role=member users only (`user_id` FK)
+2. `members` — profile data for role=member users only (`user_id` FK, `national_id`, optional `phone`)
 3. `plans` — membership plans (name, price, duration)
 4. `subscriptions` — one row per paid membership period (history)
 5. `payments` — money received, linked to the subscription it paid for
@@ -21,6 +22,7 @@ You need **Docker** (MySQL only) and **PHP + Composer** on your machine (via php
 ### 1. Install PHP and Composer (php.new)
 
 **Windows (PowerShell):**
+
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
@@ -28,11 +30,13 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/w
 ```
 
 **macOS:**
+
 ```bash
 /bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.4)"
 ```
 
 **Linux:**
+
 ```bash
 /bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.4)"
 ```
@@ -42,6 +46,7 @@ Close and reopen your terminal, then verify: `php --version` and `composer --ver
 ### 2. Clone / open the project
 
 The repo structure:
+
 ```
 membership-manager/
 ├── docker-compose.yml    ← MySQL
@@ -50,13 +55,17 @@ membership-manager/
 ```
 
 ### 3. Start MySQL
+
 From `membership-manager` (repo root):
+
 ```bash
 docker compose up -d
 ```
 
 ### 4. Install Laravel dependencies and configure
+
 From `membership-manager/server`:
+
 ```bash
 composer install
 cp .env.example .env
@@ -65,15 +74,19 @@ php artisan migrate
 ```
 
 ### 5. Start the API server
+
 ```bash
 php artisan serve
 ```
 
 ### 6. Verify it's running
+
 Open **http://127.0.0.1:8000** in your browser. You should see the Laravel welcome page — that confirms PHP + Laravel + MySQL are all working.
 
 ### 7. Sanctum (already installed in this project)
+
 If setting up from scratch on a new Laravel app, you would run:
+
 ```bash
 composer require laravel/sanctum
 php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
@@ -81,24 +94,28 @@ php artisan migrate
 ```
 
 ### Commands you'll use a lot
+
 Run from `membership-manager/server`:
 
-| Command | What it does |
-|---|---|
-| `docker compose up -d` | Start MySQL (run from repo root) |
-| `docker compose down` | Stop MySQL (run from repo root) |
-| `php artisan serve` | Start API at http://127.0.0.1:8000 |
-| `php artisan migrate` | Run new migrations |
+| Command                            | What it does                              |
+| ---------------------------------- | ----------------------------------------- |
+| `docker compose up -d`             | Start MySQL (run from repo root)          |
+| `docker compose down`              | Stop MySQL (run from repo root)           |
+| `php artisan serve`                | Start API at http://127.0.0.1:8000        |
+| `php artisan migrate`              | Run new migrations                        |
 | `php artisan migrate:fresh --seed` | Wipe DB, rebuild tables, reseed test data |
-| `php artisan route:list` | See all registered API routes |
+| `php artisan route:list`           | See all registered API routes             |
 
 Full teammate onboarding docs: `membership-manager/server/README.md`
 
 ### Bonus — exporting a raw `.sql` file (optional, only if you want to show your teacher a traditional dump)
+
 Once migrated and seeded, from repo root:
+
 ```bash
 docker compose exec mysql mysqldump -u laravel -psecret membership_manager > schema.sql
 ```
+
 (Migrations + seeders are the actual source of truth though — this is just a snapshot export.)
 
 ---
@@ -145,6 +162,7 @@ models with relationships. Use MySQL-appropriate column types.
 
 2. members — profile data for role=member users only
    - user_id: foreign key to users, unique, cascade on delete
+   - national_id: string, required (national identity card number)
    - phone: string, nullable
 
 3. plans
@@ -187,7 +205,7 @@ Run the migrations after creating them.
 Create a database seeder that fills in test data:
 - 1 admin user: email admin@example.com, password "password", role admin (no members row needed)
 - 3 plans, e.g. Monthly (30 days), Quarterly (90 days), Annual (365 days), with reasonable prices
-- 5 member users (role member), each with a matching members row (with a phone number)
+- 5 member users (role member), each with a matching members row (with a unique national_id and a phone number)
 - For each member, 1-2 subscriptions tied to a plan with realistic start/end dates — make some
   currently active and some already expired — plus a matching payment row for each subscription
 - A handful of checkins spread across a few members over the last week
@@ -202,7 +220,7 @@ Wire it into DatabaseSeeder so `php artisan migrate:fresh --seed` populates ever
 ```
 Add token-based authentication using Laravel Sanctum, with these endpoints under /api:
 
-- POST /register — name, email, password, phone. Always creates role=member, plus the
+- POST /register — name, email, password, national_id, phone (optional). Always creates role=member, plus the
   matching members row, in the same request. Returns the user + token.
 - POST /login — email, password. Returns the user (including role) + token.
 - POST /logout — revokes the current token. Protected by auth:sanctum.
@@ -236,15 +254,15 @@ abort(403) otherwise.
 ```
 Add REST endpoints for managing members under /api/members:
 
-- GET /api/members — admin only. List all members with their user info (name, email, phone).
-  Support optional query params: ?search=text (matches name or email) and
+- GET /api/members — admin only. List all members with their user info (name, email, national_id, phone).
+  Support optional query params: ?search=text (matches name, email, or national_id) and
   ?status=active|expired (based on whether their latest subscription's end_date is in the
   future or not).
 - GET /api/members/{id} — admin only, or a member fetching their own record. Returns the
   member with their subscriptions, payments, and checkins loaded.
 - POST /api/members — admin only. Creates a new user (role=member) + members row together
-  (name, email, password, phone).
-- PUT /api/members/{id} — admin only. Updates name, email, phone.
+  (name, email, password, national_id, phone).
+- PUT /api/members/{id} — admin only. Updates name, email, national_id, phone.
 - DELETE /api/members/{id} — admin only. Deletes the member (subscriptions/payments/checkins
   cascade-delete via the DB foreign keys).
 - GET /api/me/member — for a logged-in member, returns their own member record with

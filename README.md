@@ -30,15 +30,16 @@ cd server
 composer install
 cp .env.example .env   # skip if .env already exists
 php artisan key:generate   # skip if APP_KEY is already set
-php artisan migrate
+php artisan migrate:fresh --seed
 php artisan serve
 ```
 
 Open **http://127.0.0.1:8000** — you should see the Laravel welcome page.
 
-Full setup details, teammate onboarding, and daily commands are in **[server/README.md](server/README.md)**.
+Full setup: **[server/README.md](server/README.md)** · Database reset & SQL commands: **[server/docs/database.md](server/docs/database.md)**
 
 ## Project docs
 
-- Backend build prompts: [`../backend-prompts.md`](../backend-prompts.md) (parent `PHP` folder)
-- Frontend prompts: [`../frontend-prompts.md`](../frontend-prompts.md)
+- Backend build prompts: [server/backend-prompts.md](server/backend-prompts.md)
+- Frontend prompts: [client/frontend-prompts.md](client/frontend-prompts.md)
+- Database guide: [server/docs/database.md](server/docs/database.md)
