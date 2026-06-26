@@ -1,78 +1,143 @@
 # Membership Manager — Frontend (React)
 
-React + Vite + Tailwind CSS + shadcn/ui, talking to the Laravel API via axios with Bearer
-token auth. You're solid in React already, so these prompts don't dumb anything down —
-build it the way you normally would.
+React + Vite + **Modernize** admin dashboard (MUI v7), talking to the Laravel API via **SWR +
+fetch** with Bearer token auth.
+
+**Work in:** `membership-manager/client/` (the starter project)
+
+**Copy UI from:** `membership-manager/client/complete-project/` (read-only reference — never edit
+this folder; copy files into `client/src/`)
+
+**API contract:** `membership-manager/server/README.md` (API reference section)
+
+**Theme/docs:** [Modernize React documentation](https://adminmart.github.io/premium-documentation/react/modernize/index.html)
+
+**Live demo reference:** [Modern dashboard](https://modernize-react.adminmart.com/dashboards/modern)
 
 ---
 
 ## Part 1 — Setup (do this yourself, before using any prompts)
 
-You already have Node.js, so no Docker needed here — this runs directly on your machine.
+The Vite + Modernize starter already exists in `client/`. No need to create a new project.
 
-### 1. Create the Vite + React project
+### 1. Install dependencies
+
 ```bash
-npm create vite@latest membership-manager-frontend -- --template react
-cd membership-manager-frontend
+cd client
 npm install
 ```
 
-### 2. Install Tailwind CSS
+For **Prompt 4 (Payments)** you will also need:
+
 ```bash
-npm install tailwindcss @tailwindcss/vite
+npm install @mui/x-date-pickers dayjs
 ```
 
-### 3. Set up shadcn/ui
-```bash
-npx shadcn@latest init
-```
-Follow the prompts (Tailwind will already be detected).
+### 2. Point it at your backend
 
-### 4. Install router + HTTP client
-```bash
-npm install react-router-dom axios
+Create `client/.env`:
+
+```
+VITE_API_URL=http://127.0.0.1:8000/api
 ```
 
-### 5. Point it at your backend
-Create a `.env` file in the project root:
-```
-VITE_API_URL=http://localhost
-```
-(Check `sail artisan route:list` on the backend side if your API isn't on plain `http://localhost`.)
+### 3. Start the backend
 
-### 6. Run the dev server
+From `server/`:
+
 ```bash
+docker compose up -d          # from repo root, if MySQL isn't running
+php artisan serve
+php artisan migrate:fresh --seed   # first time or when you need test data
+```
+
+### 4. Run the frontend
+
+```bash
+cd client
 npm run dev
 ```
-Open the URL it prints (usually `http://localhost:5173`) — seeing the Vite+React starter page confirms the frontend is running. Once you start Prompt 0 below, this URL becomes your real app.
+
+Open **http://localhost:5173**
+
+### 5. Copy workflow (when a prompt says "copy from complete-project")
+
+1. Find the file under `client/complete-project/src/...`
+2. Copy it to the same path under `client/src/...`
+3. If the copied file imports something missing, copy that dependency too
+4. If it needs an npm package only in `complete-project/package.json`, install it in `client/`
+
+**Never modify files inside `complete-project/`.**
 
 ---
 
 ## Part 2 — How to use the prompts below
 
-Open **Claude Code** in the `membership-manager-frontend` folder. Paste **Prompt 0** first (it sets up the shared plumbing). Then paste each numbered prompt **in order**, reviewing the result before moving to the next one. Make sure the backend (Part 1 of the backend file) is up and migrated/seeded before testing login.
+Open Cursor in the **`client/`** folder. Paste **Prompt 0** first, then each numbered prompt
+**in order**. Review and test before moving on. Keep `server/README.md` open for API details.
+
+Test accounts (after seed): `admin@example.com` / `password`, `alice@example.com` / `password`
+
+Say **"Prompt X accepted"** when a step works before starting the next.
+
+---
+
+## Ground rules
+
+- **UI:** MUI + Modernize layout (`FullLayout`, `BlankCard`, `PageContainer`, etc.) — no Tailwind, no shadcn
+- **API:** SWR for GET requests; `api/fetcher.ts` helpers for POST/PUT/DELETE with `Authorization: Bearer <token>`
+- **Roles:** `user.role` is `"admin"` or `"member"` from Laravel
+- **Layout:** Both roles use the same `FullLayout` (sidebar + header); sidebar menu differs by role
+- **Code style:** Keep it simple — validate in components, no extra abstraction layers
+
+### Target sidebar menus
+
+**Admin:** Dashboard, Plans, Members, Payments, Check-ins
+
+**Member:** Dashboard, Check in
 
 ---
 
 ### Prompt 0 — Project context & shared setup
 
 ```
-This is the frontend for "Membership Manager", a generic membership-management app (works
-for any membership-based business — gym, club, library, etc.), talking to a Laravel REST API
-at the URL in VITE_API_URL via axios with Bearer token auth. Tokens come back from /login and
-/register. There are two roles, "admin" and "member", returned in the user object from the API.
+This is the frontend for "Membership Manager", talking to the Laravel REST API documented in
+../server/README.md. Base URL: import.meta.env.VITE_API_URL (e.g. http://127.0.0.1:8000/api).
 
-Set up:
-- An axios instance (e.g. src/lib/api.js) using the base URL from the env var, with a request
-  interceptor that attaches "Authorization: Bearer <token>" to every request.
-- An AuthContext (or your preferred pattern) holding the current user/token, exposing
-  login/register/logout, persisting the token in localStorage so a refresh keeps the session,
-  and redirecting to /login if there's no valid session.
-- React Router setup with route guards: unauthenticated -> /login; authenticated admin ->
-  routes under /admin/*; authenticated member -> routes under /member/*.
+Set up shared plumbing in client/:
 
-Structure components/folders however you'd normally do it — no need to keep this simple,
-build it properly.
+1. api/fetcher.ts — fetch helpers that prefix VITE_API_URL, attach Bearer token from
+   localStorage, and parse Laravel errors (422 message + errors object). Export getFetcher,
+   postFetcher, putFetcher, deleteFetcher for SWR and mutations.
+
+2. context/AuthContext.tsx — hold user + token; expose login, register, logout; persist token
+   in localStorage; on load call GET /me to restore session.
+
+3. routes/ProtectedRoute.tsx — redirect unauthenticated users to /auth/login; block wrong role
+   (admin routes vs member routes).
+
+4. Update routes/Router.tsx:
+   - /auth/login, /auth/register → BlankLayout
+   - /admin/* → FullLayout + admin guard
+   - /member/* → FullLayout + member guard
+   - / → redirect based on auth state / role
+
+5. Role-based sidebar — update layouts/full/vertical/sidebar/MenuItems.ts (or equivalent) so
+   admin and member see different menus (see Ground rules above).
+
+6. Wrap app in AuthContextProvider in main.tsx.
+
+7. Update header Profile.tsx — show logged-in user name/email and a Logout action.
+
+8. npm install swr if not already installed.
+
+Copy from complete-project when needed:
+- components/forms/theme-elements/CustomTextField.tsx
+- components/forms/theme-elements/CustomFormLabel.tsx
+- components/forms/theme-elements/CustomCheckbox.tsx
+
+Acceptance: app loads; unauthenticated visit to /admin/dashboard redirects to login; after
+manual token test or Prompt 1, admin sees admin menu and member sees member menu.
 ```
 
 ---
@@ -80,15 +145,26 @@ build it properly.
 ### Prompt 1 — Auth pages
 
 ```
-Build the login and register pages:
+Build login and register using Modernize auth1 layout. Copy from complete-project and adapt:
 
-- /login — email + password, calls POST /login, stores token + user, redirects based on role
-  (admin -> /admin/dashboard, member -> /member/dashboard).
-- /register — name, email, password, national_id (national ID card number), phone (optional), calls POST /register (always creates a member),
-  logs them in, redirects to /member/dashboard.
+Copy:
+- views/authentication/auth1/Login.tsx
+- views/authentication/auth1/Register.tsx
+- views/authentication/authForms/AuthLogin.tsx (wire to API — remove social buttons)
+- views/authentication/authForms/AuthRegister.tsx (add national_id, phone fields)
+- assets/images/backgrounds/login-bg.svg (if missing)
 
-Use shadcn/ui form components, basic client-side validation (required fields, valid email
-format), and surface the API's error message if login/register fails.
+Routes (BlankLayout):
+- /auth/login — email + password → POST /login → store token + user → redirect by role
+  (admin → /admin/dashboard, member → /member/dashboard)
+- /auth/register — name, email, password, national_id, phone (optional) → POST /register
+  → always member → /member/dashboard
+
+Use MUI Alert for API errors. Remove AuthSocialButtons / forgot-password links (not used).
+Use CustomTextField + CustomFormLabel from theme-elements.
+
+Acceptance: admin@example.com logs in → admin dashboard route; alice@example.com → member
+dashboard; invalid credentials show error; register creates account and logs in.
 ```
 
 ---
@@ -96,13 +172,21 @@ format), and surface the API's error message if login/register fails.
 ### Prompt 2 — Admin: Plans management
 
 ```
-Build an admin page at /admin/plans:
-- Table listing all plans (name, price, duration_days) from GET /api/plans.
-- "Add plan" button opening a shadcn Dialog with a form (name, price, duration_days) ->
-  POST /api/plans.
-- Edit and delete actions per row -> PUT/DELETE /api/plans/{id}.
+Build /admin/plans using MUI Table inside PageContainer + BlankCard (copy ParentCard from
+complete-project if helpful).
 
-Use shadcn/ui Table, Dialog, Button, and Input components.
+API (see server/README.md):
+- GET /plans (SWR)
+- POST /plans, PUT /plans/{id}, DELETE /plans/{id} — admin only
+
+Features:
+- Table: name, price, duration_days
+- "Add plan" → MUI Dialog with form
+- Edit and Delete per row (confirm before delete)
+
+Copy reference: views/tables/BasicTable.tsx, components/shared/ParentCard.tsx
+
+Acceptance: admin can list, create, edit, delete plans; member gets 403 on mutations.
 ```
 
 ---
@@ -110,15 +194,23 @@ Use shadcn/ui Table, Dialog, Button, and Input components.
 ### Prompt 3 — Admin: Members management
 
 ```
-Build an admin page at /admin/members:
-- Table listing all members (name, email, national_id, phone, an Active/Expired status badge) from
-  GET /api/members.
-- A search input and a status filter (All/Active/Expired) that pass ?search= and ?status=
-  query params to the API.
-- "Add member" button -> Dialog with a form (name, email, password, national_id, phone) -> POST /api/members.
-- Edit and delete actions per row.
-- Clicking a row opens a detail view (drawer or separate page) showing that member's
-  subscriptions, payments, and checkins, from GET /api/members/{id}.
+Build /admin/members (+ detail view).
+
+API:
+- GET /members?search=&status=active|expired
+- POST /members, PUT /members/{id}, DELETE /members/{id}
+- GET /members/{id} — subscriptions, payments, checkins
+
+Features:
+- Table: name, email, national_id, phone, Active/Expired Chip
+- Search input + status filter (All / Active / Expired)
+- Add member dialog (name, email, password, national_id, phone)
+- Edit / delete per row
+- Row click → detail drawer or page with subscriptions, payments, check-ins
+
+Copy reference: views/apps/contacts/ and components/apps/contacts/ for search/filter patterns
+
+Acceptance: search and filters hit API query params; detail shows related data.
 ```
 
 ---
@@ -126,12 +218,22 @@ Build an admin page at /admin/members:
 ### Prompt 4 — Admin: Payments
 
 ```
-Build an admin page at /admin/payments:
-- A form to record a new payment: searchable member select, plan select (auto-fills the
-  amount field with the plan's price, but it stays editable), payment date (defaults to
-  today) -> POST /api/payments.
-- A table below listing recent payments (member name, plan, amount, start_date, end_date,
-  payment_date) from GET /api/payments, with an optional filter by member.
+Build /admin/payments.
+
+Install: npm install @mui/x-date-pickers dayjs
+
+API:
+- POST /payments — member_id, plan_id, amount (optional), payment_date (optional)
+- GET /payments?member_id= (optional filter)
+
+Features:
+- Form: member select, plan select (auto-fill amount from plan price, editable), payment date
+  (default today) using MUI DatePicker
+- Table below: member name, plan, amount, subscription start/end, payment_date
+
+Copy reference: views/forms/FormVertical.tsx, views/forms/form-elements/MuiDateTime.tsx
+
+Acceptance: recording payment creates row and extends subscription per API rules.
 ```
 
 ---
@@ -139,16 +241,17 @@ Build an admin page at /admin/payments:
 ### Prompt 5 — Check-ins (admin + member)
 
 ```
-Build check-in features for both roles:
+Admin: /admin/checkins
+- Member select + "Check in" → POST /checkins with member_id
+- Table of recent check-ins from GET /checkins (?member_id= optional)
+- Show MUI Alert on 422: "Member has no active subscription."
 
-- Admin page /admin/checkins: a searchable member select + "Check in" button ->
-  POST /api/checkins with member_id, plus a table of recent check-ins (member name,
-  checked_in_at) from GET /api/checkins. Show a clear error message if the API rejects the
-  check-in because the member has no active subscription.
+Member: /member/checkin
+- "Check in" button → POST /checkins (empty body)
+- List own check-ins below
 
-- Member page /member/checkin: a single "Check in" button -> POST /api/checkins (no
-  member_id needed, the API infers it from the token), plus a list of their own past
-  check-ins below it.
+Acceptance: active member can check in; expired member (claire@example.com) sees error;
+admin can check in any active member.
 ```
 
 ---
@@ -156,9 +259,16 @@ Build check-in features for both roles:
 ### Prompt 6 — Admin dashboard
 
 ```
-Build /admin/dashboard showing the stats from GET /api/dashboard as shadcn Card components:
-total members, active members, expired members, revenue this month, check-ins today.
-Feel free to add small icons or a simple chart if you want — your call.
+Build /admin/dashboard.
+
+API: GET /dashboard — total_members, active_members, expired_members, revenue_this_month,
+checkins_today
+
+Copy/adapt: components/dashboards/modern/TopCards.tsx — five stat cards with Tabler icons.
+
+Optional: add a chart widget (requires apexcharts from complete-project — skip if keeping simple).
+
+Acceptance: stats match API; non-admin gets 403.
 ```
 
 ---
@@ -166,11 +276,16 @@ Feel free to add small icons or a simple chart if you want — your call.
 ### Prompt 7 — Member dashboard
 
 ```
-Build /member/dashboard for a logged-in member, using GET /api/me/member:
-- Their current subscription status (active/expired, plan name, end date).
-- A payment history table (amount, plan, start/end dates, payment date).
-- A check-in history list.
+Build /member/dashboard.
 
-Keep it read-only and scoped to their own data — the API already enforces this, just build
-the UI for it.
+API: GET /me/member — member with subscriptions, payments, checkins
+
+UI (read-only):
+- Current subscription: active/expired badge, plan name, end date
+- Payment history table
+- Check-in history list
+
+Same FullLayout with member sidebar menu.
+
+Acceptance: member sees only their data; matches API for alice@example.com.
 ```
