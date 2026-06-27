@@ -121,7 +121,7 @@ const DashboardCharts = ({ stats }: DashboardChartsProps) => {
               options={membershipOptions}
               series={[stats.active_members, stats.expired_members]}
               type="donut"
-              height={300}
+              height={315}
             />
           </ParentCard>
         </Grid>
@@ -129,7 +129,9 @@ const DashboardCharts = ({ stats }: DashboardChartsProps) => {
           <ParentCard title="Check-ins (last 7 days)">
             <ApexChart
               options={checkinsOptions}
-              series={[{ name: 'Check-ins', data: stats.checkins_by_day.map((item) => item.total) }]}
+              series={[
+                { name: 'Check-ins', data: stats.checkins_by_day.map((item) => item.total) },
+              ]}
               type="area"
               height={260}
             />
