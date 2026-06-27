@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Menu,
-  Avatar,
-  Typography,
-  Divider,
-  Button,
-  IconButton,
-  Stack,
-} from '@mui/material';
+import { Box, Menu, Avatar, Typography, Divider, Button, IconButton, Stack } from '@mui/material';
 import { IconMail } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useAuth } from 'src/context/AuthContext';
@@ -75,11 +66,11 @@ const Profile = () => {
         <Stack direction="row" py={2} spacing={2} alignItems="center">
           <Avatar src={ProfileImg} alt={user?.name || 'User'} sx={{ width: 56, height: 56 }} />
           <Box>
-            <Typography variant="subtitle1" fontWeight={600}>
-              {user?.name}
-            </Typography>
             <Typography variant="body2" color="textSecondary" sx={{ textTransform: 'capitalize' }}>
               {user?.role}
+            </Typography>
+            <Typography variant="subtitle1" fontWeight={600}>
+              {user?.name}
             </Typography>
             <Typography
               variant="body2"

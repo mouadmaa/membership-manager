@@ -44,7 +44,7 @@ Main application tables (see `database/migrations/`):
 |-------|---------|
 | `users` | Login accounts (`role`: `admin` or `member`) |
 | `members` | Member profile (`national_id`, `phone`) linked to `users` |
-| `plans` | Membership plans (name, price, duration_days) |
+| `plans` | Membership plans (name, price in **DH**, duration_days) |
 | `subscriptions` | Paid membership periods per member |
 | `payments` | Payments linked to subscriptions |
 | `checkins` | Visit / attendance log |
@@ -106,7 +106,7 @@ php artisan migrate:fresh --seed
 | Member | `david@example.com` | `password` |
 | Member | `emma@example.com` | `password` |
 
-Full seed logic: `database/seeders/DatabaseSeeder.php`.
+Full seed logic: `database/seeders/DatabaseSeeder.php`. Plan prices are in **Moroccan dirham (DH)**: Monthly 290, Quarterly 800, Annual 3000.
 
 ---
 

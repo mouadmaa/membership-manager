@@ -12,8 +12,15 @@ import { formatMoney } from 'src/utils/formatMoney';
 
 type PaletteColor = 'primary' | 'success' | 'error' | 'warning' | 'info';
 
+type StatKey =
+  | 'total_members'
+  | 'active_members'
+  | 'expired_members'
+  | 'revenue_this_month'
+  | 'checkins_today';
+
 interface StatCard {
-  key: keyof DashboardStats;
+  key: StatKey;
   title: string;
   icon: ElementType;
   bgcolor: PaletteColor;

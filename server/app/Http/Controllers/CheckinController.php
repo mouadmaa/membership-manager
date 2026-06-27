@@ -10,7 +10,7 @@ class CheckinController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Checkin::query()->orderByDesc('checked_in_at');
+        $query = Checkin::query()->orderByDesc('updated_at');
 
         if ($request->user()->role === 'admin') {
             if ($memberId = $request->query('member_id')) {

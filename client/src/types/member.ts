@@ -6,6 +6,7 @@ export interface Subscription {
   plan_id: number;
   start_date: string;
   end_date: string;
+  updated_at?: string;
 }
 
 export interface Payment {
@@ -14,6 +15,7 @@ export interface Payment {
   subscription_id: number;
   amount: string;
   payment_date: string;
+  updated_at?: string;
   subscription?: Subscription;
 }
 
@@ -21,6 +23,7 @@ export interface Checkin {
   id: number;
   member_id: number;
   checked_in_at: string;
+  updated_at?: string;
 }
 
 export interface Member {
@@ -28,6 +31,7 @@ export interface Member {
   user_id: number;
   national_id: string;
   phone: string | null;
+  updated_at?: string;
   user: User;
   subscriptions?: Subscription[];
   payments?: Payment[];

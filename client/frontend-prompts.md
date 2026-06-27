@@ -1,5 +1,7 @@
 # Membership Manager — Frontend (React)
 
+**Status: complete** (Prompts 0–7). App branding: **MemberShip** (`src/config/app.ts`).
+
 React + Vite + **Modernize** admin dashboard (MUI v7), talking to the Laravel API via **SWR +
 fetch** with Bearer token auth.
 
@@ -30,7 +32,13 @@ npm install
 For **Prompt 4 (Payments)** you will also need:
 
 ```bash
-npm install @mui/x-date-pickers dayjs
+npm install @mui/x-date-pickers@^8.2.0 dayjs
+```
+
+For **Prompt 6 (Dashboard charts)**:
+
+```bash
+npm install apexcharts react-apexcharts
 ```
 
 ### 2. Point it at your backend
@@ -95,6 +103,19 @@ Say **"Prompt X accepted"** when a step works before starting the next.
 **Admin:** Dashboard, Plans, Members, Payments, Check-ins
 
 **Member:** Dashboard, Check in
+
+---
+
+## Implementation notes (current build)
+
+| Item | Detail |
+| ---- | ------ |
+| App name | **MemberShip** — logo + login/register (`src/config/app.ts`) |
+| Currency | Prices shown as **DH** via `formatMoney()` |
+| List order | Tables use API order (`updated_at` DESC) |
+| Theme customizer | Hidden (Modernize settings FAB removed from `FullLayout`) |
+| Subscriptions page | **Not built** — subs visible on member drawer + member dashboard; created via payments only |
+| Dashboard | Stat cards + revenue bar chart, membership donut, check-ins area chart, recent activity tables |
 
 ---
 
@@ -256,24 +277,26 @@ admin can check in any active member.
 
 ---
 
-### Prompt 6 — Admin dashboard
+### Prompt 6 — Admin dashboard ✅
 
 ```
 Build /admin/dashboard.
 
 API: GET /dashboard — total_members, active_members, expired_members, revenue_this_month,
-checkins_today
+checkins_today, revenue_by_month, checkins_by_day, recent_payments, recent_checkins
 
 Copy/adapt: components/dashboards/modern/TopCards.tsx — five stat cards with Tabler icons.
 
-Optional: add a chart widget (requires apexcharts from complete-project — skip if keeping simple).
+Charts (apexcharts): revenue (6 months), membership donut, check-ins (7 days), recent tables.
+
+Install: npm install apexcharts react-apexcharts
 
 Acceptance: stats match API; non-admin gets 403.
 ```
 
 ---
 
-### Prompt 7 — Member dashboard
+### Prompt 7 — Member dashboard ✅
 
 ```
 Build /member/dashboard.
@@ -289,3 +312,11 @@ Same FullLayout with member sidebar menu.
 
 Acceptance: member sees only their data; matches API for alice@example.com.
 ```
+
+---
+
+### Optional future work (not implemented)
+
+**Admin subscriptions page** — would need `GET /api/subscriptions` (and optional filters) plus
+`/admin/subscriptions` UI. Current design keeps subscriptions nested on members and created only
+via payments. Add only if you need a global subscription list or manual subscription edits.

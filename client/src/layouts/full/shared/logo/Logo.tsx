@@ -1,60 +1,39 @@
 import { FC, useContext } from 'react';
-
 import { Link } from 'react-router';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { ReactComponent as LogoDark } from 'src/assets/images/logos/dark-logo.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { ReactComponent as LogoDarkRTL } from 'src/assets/images/logos/dark-rtl-logo.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { ReactComponent as LogoLight } from 'src/assets/images/logos/light-logo.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { ReactComponent as LogoLightRTL } from 'src/assets/images/logos/light-logo-rtl.svg';
-import { styled } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
+import { IconTicket } from '@tabler/icons-react';
 import config from 'src/context/config';
 import { CustomizerContext } from 'src/context/CustomizerContext';
-
+import { APP_NAME } from 'src/config/app';
 
 const Logo: FC = () => {
-  const { isCollapse, isSidebarHover, activeDir, activeMode } = useContext(CustomizerContext);
-  const TopbarHeight = config.topbarHeight;
-
-  const LinkStyled = styled(Link)(() => ({
-    height: TopbarHeight,
-    width: isCollapse == "mini-sidebar" && !isSidebarHover ? '40px' : '180px',
-    overflow: 'hidden',
-    display: 'block',
-  }));
-
-  if (activeDir === 'ltr') {
-    return (
-      <LinkStyled to="/" style={{
-        display: 'flex',
-        alignItems: 'center',
-      }}>
-        {activeMode === 'dark' ? (
-          <LogoLight />
-        ) : (
-          <LogoDark />
-        )}
-      </LinkStyled>
-    );
-  }
+  const theme = useTheme();
+  const { isCollapse, isSidebarHover, activeMode } = useContext(CustomizerContext);
+  const collapsed = isCollapse === 'mini-sidebar' && !isSidebarHover;
 
   return (
-    <LinkStyled to="/" style={{
-      display: 'flex',
-      alignItems: 'center',
-    }}>
-      {activeMode === 'dark' ? (
-        <LogoDarkRTL />
-      ) : (
-        <LogoLightRTL />
-      )}
-    </LinkStyled>
+    <Box
+      component={Link}
+      to="/"
+      sx={{
+        height: config.topbarHeight,
+        width: collapsed ? '40px' : '180px',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        color: activeMode === 'dark' ? 'common.white' : 'text.primary',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <IconTicket size={collapsed ? 28 : 32} stroke={1.75} color={theme.palette.primary.main} />
+        {!collapsed ? (
+          <Typography variant="h5" fontWeight={700} lineHeight={1.1} color="inherit">
+            {APP_NAME}
+          </Typography>
+        ) : null}
+      </Box>
+    </Box>
   );
 };
 

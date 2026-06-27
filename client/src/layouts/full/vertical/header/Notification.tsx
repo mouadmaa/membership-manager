@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import {
   IconButton,
   Box,
-  Badge,
+  // Badge,
   Menu,
   MenuItem,
   Avatar,
   Typography,
   Button,
   Chip,
-  Stack
+  Stack,
 } from '@mui/material';
 import * as dropdownData from './data';
 import Scrollbar from 'src/components/custom-scroll/Scrollbar';
@@ -45,9 +45,9 @@ const Notifications = () => {
         }}
         onClick={handleClick2}
       >
-        <Badge variant="dot" color="primary">
-          <IconBellRinging size="21" stroke="1.5" />
-        </Badge>
+        {/* <Badge variant="dot" color="primary"> */}
+        <IconBellRinging size="21" stroke="1.5" />
+        {/* </Badge> */}
       </IconButton>
       {/* ------------------------------------------- */}
       {/* Message Dropdown */}

@@ -9,7 +9,7 @@ class PlanController extends Controller
 {
     public function index()
     {
-        return Plan::all();
+        return Plan::query()->orderByDesc('updated_at')->get();
     }
 
     public function store(Request $request)

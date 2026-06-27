@@ -6,7 +6,7 @@ system (gyms, clubs, libraries, etc.) with an admin dashboard and member portal.
 | Folder | Purpose |
 | ------ | ------- |
 | [`server/`](server/) | Laravel 13 REST API (MySQL, Sanctum auth) |
-| [`client/`](client/) | React + Vite + MUI (Modernize dashboard template) |
+| [`client/`](client/) | React + Vite + MUI — **MemberShip** admin & member portal |
 
 ---
 
@@ -94,7 +94,7 @@ Use seeded accounts (password for all: `password`):
 | Admin | `admin@example.com` |
 | Member | `alice@example.com` |
 
----
+Seeded plan prices are in **DH** (Monthly 290, Quarterly 800, Annual 3000).
 
 ## Daily development
 
@@ -147,7 +147,7 @@ membership-manager/
 | [server/docs/database.md](server/docs/database.md) | Database connection, reset, SQL examples |
 | [client/README.md](client/README.md) | Node/React setup, dev workflow, copy UI from template |
 | [server/backend-prompts.md](server/backend-prompts.md) | Backend build prompts (completed) |
-| [client/frontend-prompts.md](client/frontend-prompts.md) | Frontend build prompts (in progress) |
+| [client/frontend-prompts.md](client/frontend-prompts.md) | Frontend build prompts (completed) |
 
 ---
 

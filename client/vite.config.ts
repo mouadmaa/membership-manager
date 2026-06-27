@@ -17,6 +17,7 @@ export default defineConfig({
         exclude: [],
     },
     optimizeDeps: {
+        include: ['apexcharts', 'react-apexcharts'],
         esbuildOptions: {
             plugins: [
                 {

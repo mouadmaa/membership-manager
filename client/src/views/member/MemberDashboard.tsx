@@ -38,12 +38,8 @@ const MemberDashboard = () => {
   const planName =
     plans?.find((plan) => plan.id === latestSubscription?.plan_id)?.name || '—';
 
-  const sortedPayments = [...(member?.payments || [])].sort(
-    (a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime(),
-  );
-  const sortedCheckins = [...(member?.checkins || [])].sort(
-    (a, b) => new Date(b.checked_in_at).getTime() - new Date(a.checked_in_at).getTime(),
-  );
+  const sortedPayments = member?.payments || [];
+  const sortedCheckins = member?.checkins || [];
 
   return (
     <PageContainer title="Dashboard" description="Your membership overview">

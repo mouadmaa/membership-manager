@@ -44,7 +44,7 @@ class MemberController extends Controller
             }
         }
 
-        return $query->get();
+        return $query->orderByDesc('updated_at')->get();
     }
 
     public function show(Request $request, Member $member)
@@ -53,7 +53,12 @@ class MemberController extends Controller
             abort(403);
         }
 
-        return $member->load(['user', 'subscriptions', 'payments', 'checkins']);
+        return $member->load([
+            'user',
+            'subscriptions' => fn ($q) => $q->orderByDesc('updated_at'),
+            'payments' => fn ($q) => $q->orderByDesc('updated_at'),
+            'checkins' => fn ($q) => $q->orderByDesc('updated_at'),
+        ]);
     }
 
     public function store(Request $request)
@@ -133,6 +138,10 @@ class MemberController extends Controller
             abort(404);
         }
 
-        return $member->load(['subscriptions', 'payments', 'checkins']);
+        return $member->load([
+            'subscriptions' => fn ($q) => $q->orderByDesc('updated_at'),
+            'payments' => fn ($q) => $q->orderByDesc('updated_at'),
+            'checkins' => fn ($q) => $q->orderByDesc('updated_at'),
+        ]);
     }
 }

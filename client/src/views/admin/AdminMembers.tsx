@@ -32,12 +32,7 @@ import { getAuthErrorMessage } from 'src/context/AuthContext';
 import { useApi } from 'src/hooks/useApi';
 import type { Member, MemberFormData } from 'src/types/member';
 import MemberDetailDrawer from 'src/components/members/MemberDetailDrawer';
-import {
-  buildMembersPath,
-  emptyMemberForm,
-  getMemberStatus,
-  memberToForm,
-} from 'src/types/member';
+import { buildMembersPath, emptyMemberForm, getMemberStatus, memberToForm } from 'src/types/member';
 
 const drawerWidth = 420;
 
@@ -46,10 +41,7 @@ const AdminMembers = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [searchInput, setSearchInput] = useState('');
 
-  const membersPath = useMemo(
-    () => buildMembersPath(search, statusFilter),
-    [search, statusFilter],
-  );
+  const membersPath = useMemo(() => buildMembersPath(search, statusFilter), [search, statusFilter]);
 
   const { data: members, error, isLoading } = useApi<Member[]>(membersPath);
 
@@ -190,8 +182,9 @@ const AdminMembers = () => {
           onSubmit={handleSearch}
         >
           <CustomTextField
-            placeholder="Search name, email, or national ID"
+            placeholder="Search..."
             fullWidth
+            size="small"
             value={searchInput}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchInput(e.target.value)}
           />
@@ -199,14 +192,15 @@ const AdminMembers = () => {
             select
             label="Subscription status"
             value={statusFilter}
+            size="small"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStatusFilter(e.target.value)}
-            sx={{ minWidth: 160 }}
+            sx={{ minWidth: 200 }}
           >
             <MenuItem value="">All</MenuItem>
             <MenuItem value="active">Active</MenuItem>
             <MenuItem value="expired">Expired</MenuItem>
           </CustomTextField>
-          <Button type="submit" variant="outlined">
+          <Button type="submit" variant="outlined" size="small" sx={{ minWidth: 120 }}>
             Search
           </Button>
         </Stack>

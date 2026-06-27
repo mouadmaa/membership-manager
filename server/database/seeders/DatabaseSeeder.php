@@ -24,19 +24,19 @@ class DatabaseSeeder extends Seeder
 
         $monthly = Plan::create([
             'name' => 'Monthly',
-            'price' => 29.99,
+            'price' => 290,
             'duration_days' => 30,
         ]);
 
         $quarterly = Plan::create([
             'name' => 'Quarterly',
-            'price' => 79.99,
+            'price' => 800,
             'duration_days' => 90,
         ]);
 
         $annual = Plan::create([
             'name' => 'Annual',
-            'price' => 299.99,
+            'price' => 3000,
             'duration_days' => 365,
         ]);
 

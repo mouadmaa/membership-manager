@@ -92,25 +92,23 @@ const AdminCheckins = () => {
                 </CustomFormLabel>
                 <Autocomplete
                   id="checkin-member"
-                  size="small"
                   options={members || []}
                   value={selectedMember}
                   onChange={(_, value) => setSelectedMember(value)}
                   getOptionLabel={(member) => `${member.user.name} (${member.national_id})`}
                   isOptionEqualToValue={(option, value) => option.id === value.id}
                   renderInput={(params) => (
-                    <CustomTextField {...params} size="small" placeholder="Search member..." />
+                    <CustomTextField {...params} placeholder="Search member..." />
                   )}
                 />
               </Box>
               <Button
                 variant="contained"
                 color="primary"
-                size="small"
                 startIcon={<IconLogin size={18} />}
                 disabled={!selectedMember || submitting}
                 onClick={handleCheckIn}
-                sx={{ minWidth: { sm: 160 }, whiteSpace: 'nowrap' }}
+                sx={{ minWidth: { sm: 160 }, height: 42, whiteSpace: 'nowrap' }}
               >
                 Check in
               </Button>

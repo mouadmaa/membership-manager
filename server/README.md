@@ -175,6 +175,20 @@ This section documents every endpoint implemented in the backend. Use it as the 
 
 Admins do **not** have a `members` row. Members have a linked `members` record via `user_id`.
 
+### List ordering
+
+All collection endpoints return rows ordered by **`updated_at` descending** (most recently
+updated first): `GET /plans`, `GET /members`, `GET /payments`, `GET /checkins`. Nested relations
+on member detail (`subscriptions`, `payments`, `checkins`) use the same order.
+
+### Subscriptions (no standalone API)
+
+Subscriptions are **not** a top-level REST resource. They are:
+- **Created** by `POST /api/payments` (one new subscription per payment)
+- **Read** nested on `GET /api/members/{id}` and `GET /api/me/member`
+
+There is no `GET /api/subscriptions` unless you add it later for an admin subscriptions page.
+
 ### Active subscription (business rule)
 
 Used by check-ins, member status filters, and dashboard stats:
@@ -193,7 +207,7 @@ Used by check-ins, member status filters, and dashboard stats:
 | Member | `david@example.com` | `password` |
 | Member | `emma@example.com` | `password` (expired subscription) |
 
-Seeded plans: **Monthly** (29.99 / 30 days), **Quarterly** (79.99 / 90 days), **Annual** (299.99 / 365 days).
+Seeded plans: **Monthly** (290 DH / 30 days), **Quarterly** (800 DH / 90 days), **Annual** (3000 DH / 365 days).
 
 ---
 
@@ -237,7 +251,7 @@ Seeded plans: **Monthly** (29.99 / 30 days), **Quarterly** (79.99 / 90 days), **
 {
   "id": 1,
   "name": "Monthly",
-  "price": "29.99",
+  "price": "290",
   "duration_days": 30,
   "created_at": "2026-06-25T00:00:00.000000Z",
   "updated_at": "2026-06-25T00:00:00.000000Z"
@@ -265,7 +279,7 @@ Seeded plans: **Monthly** (29.99 / 30 days), **Quarterly** (79.99 / 90 days), **
   "id": 1,
   "member_id": 1,
   "subscription_id": 1,
-  "amount": "29.99",
+  "amount": "290",
   "payment_date": "2026-06-15",
   "created_at": "2026-06-25T00:00:00.000000Z",
   "updated_at": "2026-06-25T00:00:00.000000Z",
@@ -292,8 +306,12 @@ Seeded plans: **Monthly** (29.99 / 30 days), **Quarterly** (79.99 / 90 days), **
   "total_members": 5,
   "active_members": 3,
   "expired_members": 2,
-  "revenue_this_month": 59.98,
-  "checkins_today": 2
+  "revenue_this_month": 290,
+  "checkins_today": 2,
+  "revenue_by_month": [{ "month": "Jan 2026", "total": 290 }],
+  "checkins_by_day": [{ "day": "Mon", "total": 1 }],
+  "recent_payments": [{ "id": 1, "member_name": "Alice Martin", "amount": 290, "payment_date": "2026-06-15", "updated_at": "..." }],
+  "recent_checkins": [{ "id": 1, "member_name": "Alice Martin", "checked_in_at": "...", "updated_at": "..." }]
 }
 ```
 
@@ -545,6 +563,10 @@ Creates a check-in with `checked_in_at` set to the current time.
 | `expired_members` | `total_members - active_members` |
 | `revenue_this_month` | Sum of `payments.amount` where `payment_date` is in the current calendar month |
 | `checkins_today` | Count of check-ins where `checked_in_at` is today |
+| `revenue_by_month` | Last 6 calendar months — `{ month, total }[]` for charts |
+| `checkins_by_day` | Last 7 days — `{ day, total }[]` for charts |
+| `recent_payments` | 5 latest payments with member name |
+| `recent_checkins` | 5 latest check-ins with member name |
 
 **Response `403`** for non-admin users.
 

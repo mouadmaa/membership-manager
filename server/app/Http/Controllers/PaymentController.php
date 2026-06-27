@@ -29,7 +29,7 @@ class PaymentController extends Controller
             $query->where('member_id', $member->id);
         }
 
-        return $query->get();
+        return $query->orderByDesc('updated_at')->get();
     }
 
     public function store(Request $request)

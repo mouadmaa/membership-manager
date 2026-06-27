@@ -4,9 +4,10 @@ import PageContainer from 'src/components/container/PageContainer';
 import img1 from 'src/assets/images/backgrounds/login-bg.svg';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 import AuthRegister from '../authForms/AuthRegister';
+import { APP_NAME } from 'src/config/app';
 
 const Register = () => (
-  <PageContainer title="Register" description="Membership Manager registration">
+  <PageContainer title="Register" description={`${APP_NAME} registration`}>
     <Grid container spacing={0} justifyContent="center" sx={{ overflowX: 'hidden' }}>
       <Grid
         sx={{
@@ -68,7 +69,7 @@ const Register = () => (
       >
         <Box p={4}>
           <AuthRegister
-            title="Create account"
+            title={`Join ${APP_NAME}`}
             subtext={
               <Typography variant="subtitle1" color="textSecondary" mb={1}>
                 Register as a new member

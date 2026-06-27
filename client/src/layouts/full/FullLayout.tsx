@@ -3,7 +3,7 @@ import { styled, Container, Box, useTheme } from '@mui/material';
 import { Outlet } from 'react-router';
 import Header from './vertical/header/Header';
 import Sidebar from './vertical/sidebar/Sidebar';
-import Customizer from './shared/customizer/Customizer';
+// import Customizer from './shared/customizer/Customizer';
 import Navigation from '../full/horizontal/navbar/Navigation';
 import HorizontalHeader from '../full/horizontal/header/Header';
 import ScrollToTop from '../../components/shared/ScrollToTop';
@@ -76,7 +76,7 @@ const FullLayout: FC = () => {
             {/* End Page */}
             {/* ------------------------------------------- */}
           </Container>
-          <Customizer />
+          {/* <Customizer /> */}
         </PageWrapper>
       </MainWrapper>
     </>

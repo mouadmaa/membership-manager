@@ -4,9 +4,10 @@ import PageContainer from 'src/components/container/PageContainer';
 import img1 from 'src/assets/images/backgrounds/login-bg.svg';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 import AuthLogin from '../authForms/AuthLogin';
+import { APP_NAME } from 'src/config/app';
 
 const Login = () => (
-  <PageContainer title="Login" description="Membership Manager login">
+  <PageContainer title="Login" description={`${APP_NAME} login`}>
     <Grid container spacing={0} sx={{ overflowX: 'hidden' }}>
       <Grid
         sx={{
@@ -68,7 +69,7 @@ const Login = () => (
       >
         <Box p={4}>
           <AuthLogin
-            title="Membership Manager"
+            title={APP_NAME}
             subtext={
               <Typography variant="subtitle1" color="textSecondary" mb={1}>
                 Sign in to your account

@@ -12,14 +12,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import {
-  IconCalendar,
-  IconCreditCard,
-  IconId,
-  IconMail,
-  IconPhone,
-  IconTicket,
-} from '@tabler/icons-react';
+import { IconCalendar, IconCreditCard, IconId, IconMail, IconPhone } from '@tabler/icons-react';
 import BlankCard from 'src/components/shared/BlankCard';
 import type { Member } from 'src/types/member';
 import { getMemberStatus } from 'src/types/member';
@@ -31,15 +24,7 @@ interface MemberDetailDrawerProps {
   member: Member;
 }
 
-const InfoRow = ({
-  icon,
-  label,
-  value,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-}) => (
+const InfoRow = ({ icon, label, value }: { icon: ReactNode; label: string; value: string }) => (
   <Stack direction="row" spacing={1.5} alignItems="center">
     <Box color="primary.main" display="flex">
       {icon}
@@ -55,13 +40,7 @@ const InfoRow = ({
   </Stack>
 );
 
-const SectionCard = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) => (
+const SectionCard = ({ title, children }: { title: string; children: ReactNode }) => (
   <BlankCard>
     <Box p={2.5}>
       <Typography variant="subtitle1" fontWeight={600} mb={2}>
@@ -74,15 +53,9 @@ const SectionCard = ({
 
 const MemberDetailDrawer = ({ member }: MemberDetailDrawerProps) => {
   const status = getMemberStatus(member);
-  const sortedSubscriptions = [...(member.subscriptions || [])].sort(
-    (a, b) => new Date(b.end_date).getTime() - new Date(a.end_date).getTime(),
-  );
-  const sortedPayments = [...(member.payments || [])].sort(
-    (a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime(),
-  );
-  const sortedCheckins = [...(member.checkins || [])].sort(
-    (a, b) => new Date(b.checked_in_at).getTime() - new Date(a.checked_in_at).getTime(),
-  );
+  const sortedSubscriptions = member.subscriptions || [];
+  const sortedPayments = member.payments || [];
+  const sortedCheckins = member.checkins || [];
 
   return (
     <Stack spacing={3}>
@@ -121,11 +94,7 @@ const MemberDetailDrawer = ({ member }: MemberDetailDrawerProps) => {
         <Box p={2.5}>
           <Stack spacing={2}>
             <InfoRow icon={<IconId size={18} />} label="National ID" value={member.national_id} />
-            <InfoRow
-              icon={<IconPhone size={18} />}
-              label="Phone"
-              value={member.phone || '—'}
-            />
+            <InfoRow icon={<IconPhone size={18} />} label="Phone" value={member.phone || '—'} />
             <InfoRow icon={<IconMail size={18} />} label="Email" value={member.user.email} />
           </Stack>
         </Box>
@@ -202,27 +171,6 @@ const MemberDetailDrawer = ({ member }: MemberDetailDrawerProps) => {
           </Typography>
         )}
       </SectionCard>
-
-      {sortedSubscriptions[0] ? (
-        <Box
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            bgcolor: 'primary.light',
-            color: 'primary.main',
-          }}
-        >
-          <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
-            <IconTicket size={18} />
-            <Typography variant="subtitle2" fontWeight={600}>
-              Latest membership
-            </Typography>
-          </Stack>
-          <Typography variant="body2">
-            Valid until {formatDate(sortedSubscriptions[0].end_date)}
-          </Typography>
-        </Box>
-      ) : null}
     </Stack>
   );
 };

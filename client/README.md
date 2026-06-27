@@ -1,9 +1,10 @@
-# Membership Manager — React Client
+# MemberShip — React Client
 
-React admin dashboard for the Membership Manager project. Talks to the Laravel API in
-[`../server/`](../server/) using **SWR + fetch** with Bearer token auth.
+React admin dashboard for the Membership Manager project. Branded as **MemberShip** in the UI
+(`src/config/app.ts`). Talks to the Laravel API in [`../server/`](../server/) using **SWR + fetch**
+with Bearer token auth.
 
-**Stack:** React 19 · Vite 6 · TypeScript · MUI v7 · Modernize dashboard template · SWR
+**Stack:** React 19 · Vite 6 · TypeScript · MUI v7 · Modernize template · SWR · ApexCharts (dashboard)
 
 **API docs:** [server/README.md → API reference](../server/README.md#api-reference)
 
@@ -15,11 +16,17 @@ React admin dashboard for the Membership Manager project. Talks to the Laravel A
 
 ## What this app does
 
-- **Admin** — dashboard, plans, members, payments, check-ins
-- **Member** — own dashboard, self check-in, payment and subscription history
+| Role | Routes | Features |
+| ---- | ------ | -------- |
+| **Admin** | `/admin/dashboard`, `/admin/plans`, `/admin/members`, `/admin/payments`, `/admin/checkins` | Stats + charts, CRUD plans/members, record payments, check in members |
+| **Member** | `/member/dashboard`, `/member/checkin` | Current subscription, payment & check-in history, self check-in |
 
-Auth is token-based (Laravel Sanctum). After login, the app stores the token in
-`localStorage` and sends it on every API request.
+Auth is token-based (Laravel Sanctum). After login, the app stores the token in `localStorage`
+and sends it on every API request.
+
+**Not implemented (by design):** no dedicated `/admin/subscriptions` page — subscriptions are
+created via payments and viewed on member detail / member dashboard. See frontend-prompts notes
+if you want to add this later.
 
 ---
 
@@ -162,8 +169,9 @@ Run from **`client/`**:
 1. Read the API for the feature in **[server/README.md](../server/README.md)**
 2. Follow **[frontend-prompts.md](frontend-prompts.md)** prompt by prompt
 3. Copy UI patterns from `complete-project/src/` into `src/` when needed
-4. Install extra packages from `complete-project/package.json` only when a prompt requires them
-   (e.g. `@mui/x-date-pickers` and `dayjs` for payments)
+4. Install extra packages from `complete-project/package.json` only when needed:
+   - `@mui/x-date-pickers@^8.2.0` and `dayjs` (payments date picker)
+   - `apexcharts` and `react-apexcharts` (admin dashboard charts)
 
 ### Copy workflow
 
@@ -190,6 +198,11 @@ not a random port.
 ### `npm run build` fails
 
 Run `npm run build` and fix TypeScript errors shown in the output.
+
+### Dashboard fails to load after adding charts
+
+Restart the dev server after installing `apexcharts`. If needed: `rm -rf node_modules/.vite` then
+`npm run dev`.
 
 ### Port 5173 already in use
 

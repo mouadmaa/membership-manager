@@ -98,13 +98,13 @@ const AdminPayments = () => {
                 </Alert>
               ) : null}
               <Grid container spacing={2}>
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <CustomFormLabel htmlFor="payment-member" sx={compactLabel}>
                     Member
                   </CustomFormLabel>
                   <Autocomplete
                     id="payment-member"
-                    size="small"
+                    // size="small"
                     options={members || []}
                     value={selectedMember}
                     onChange={(_, value) => setSelectedMember(value)}
@@ -113,21 +113,21 @@ const AdminPayments = () => {
                     renderInput={(params) => (
                       <CustomTextField
                         {...params}
-                        size="small"
+                        // size="small"
                         required
                         placeholder="Search member..."
                       />
                     )}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <CustomFormLabel htmlFor="payment-plan" sx={compactLabel}>
                     Plan
                   </CustomFormLabel>
                   <CustomTextField
                     id="payment-plan"
                     select
-                    size="small"
+                    // size="small"
                     fullWidth
                     required
                     value={planId}
@@ -150,7 +150,7 @@ const AdminPayments = () => {
                   <CustomTextField
                     id="payment-amount"
                     type="number"
-                    size="small"
+                    // size="small"
                     fullWidth
                     required
                     inputProps={{ min: 0, step: '0.01' }}
@@ -158,7 +158,7 @@ const AdminPayments = () => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 3 }}>
                   <CustomFormLabel sx={compactLabel}>Payment date</CustomFormLabel>
                   <DatePicker
                     value={paymentDate}
@@ -172,12 +172,12 @@ const AdminPayments = () => {
                     }}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, md: 4 }} display="flex" alignItems="flex-end">
+                <Grid size={{ xs: 12, md: 6 }}></Grid>
+                <Grid size={{ xs: 12, md: 3 }} display="flex" alignItems="flex-end">
                   <Button
                     type="submit"
                     variant="contained"
                     color="primary"
-                    size="small"
                     fullWidth
                     disabled={submitting}
                   >

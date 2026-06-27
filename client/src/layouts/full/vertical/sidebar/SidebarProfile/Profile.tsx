@@ -23,14 +23,16 @@ export const Profile = () => {
       display="flex"
       alignItems="center"
       gap={2}
-      sx={{ m: 3, p: 2, bgcolor: 'secondary.light' }}
+      sx={{ mx: 3, mt: 3, mb: 4, p: 2, bgcolor: 'secondary.light', borderRadius: 2 }}
     >
       {!hideMenu ? (
         <>
-          <Avatar alt={user?.name || 'User'} src={img1} />
+          <Avatar alt={user?.name || 'User'} src={img1} sx={{ width: 40, height: 40 }} />
 
-          <Box>
-            <Typography variant="h6">{user?.name}</Typography>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="subtitle1" fontWeight={600} noWrap>
+              {user?.name}
+            </Typography>
             <Typography variant="caption" sx={{ textTransform: 'capitalize' }}>
               {user?.role}
             </Typography>

@@ -1,6 +1,10 @@
 # Membership Manager — Backend (Laravel)
 
+**Status: complete** (Prompts 0–8 below). API is ready for the React client.
+
 A generic membership-management REST API (works for any membership-based business — gym, club, library, etc.). Two roles: **admin** (manages everything) and **member** (manages only their own data).
+
+**Subscriptions:** there is no `GET /api/subscriptions` endpoint. Subscriptions are created when an admin records a payment (`POST /api/payments`) and are returned nested on member endpoints (`GET /api/members/{id}`, `GET /api/me/member`).
 
 **Final schema (6 tables):**
 
@@ -325,3 +329,11 @@ Add GET /api/dashboard, admin only, returning a JSON object with:
 
 Keep the queries simple and directly in the controller method.
 ```
+
+**Also implemented (beyond original prompt):**
+- `revenue_by_month` — last 6 months totals for charts
+- `checkins_by_day` — last 7 days counts for charts
+- `recent_payments` / `recent_checkins` — 5 most recent rows for dashboard tables
+- All list endpoints (`plans`, `members`, `payments`, `checkins`) ordered by `updated_at` DESC
+- Nested member relations (`subscriptions`, `payments`, `checkins`) ordered by `updated_at` DESC
+- Plan seed prices in **DH**: Monthly 290, Quarterly 800, Annual 3000

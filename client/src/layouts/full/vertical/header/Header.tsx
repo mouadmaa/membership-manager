@@ -4,11 +4,11 @@ import { IconButton, Box, AppBar, useMediaQuery, Toolbar, styled, Stack } from '
 import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
 import Notifications from './Notification';
 import Profile from './Profile';
-import Cart from './Cart';
+// import Cart from './Cart';
 import Search from './Search';
 import Language from './Language';
 
-import Navigation from './Navigation';
+// import Navigation from './Navigation';
 import MobileRightSidebar from './MobileRightSidebar';
 import config from 'src/context/config';
 import { useContext } from 'react';
@@ -17,7 +17,14 @@ import { CustomizerContext } from 'src/context/CustomizerContext';
 const Header = () => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
   const lgDown = useMediaQuery((theme: any) => theme.breakpoints.down('lg'));
-  const { activeMode, setActiveMode, setIsCollapse, isCollapse, isMobileSidebar, setIsMobileSidebar } = useContext(CustomizerContext);
+  const {
+    activeMode,
+    setActiveMode,
+    setIsCollapse,
+    isCollapse,
+    isMobileSidebar,
+    setIsMobileSidebar,
+  } = useContext(CustomizerContext);
 
   const TopbarHeight = config.topbarHeight;
 
@@ -48,7 +55,9 @@ const Header = () => {
             // Toggle sidebar on both mobile and desktop based on screen size
             if (lgUp) {
               // For large screens, toggle between full-sidebar and mini-sidebar
-              isCollapse === "full-sidebar" ? setIsCollapse("mini-sidebar") : setIsCollapse("full-sidebar");
+              isCollapse === 'full-sidebar'
+                ? setIsCollapse('mini-sidebar')
+                : setIsCollapse('full-sidebar');
             } else {
               // For smaller screens, toggle mobile sidebar
               setIsMobileSidebar(!isMobileSidebar);
@@ -62,11 +71,7 @@ const Header = () => {
         {/* Search Dropdown */}
         {/* ------------------------------------------- */}
         <Search />
-        {lgUp ? (
-          <>
-            <Navigation />
-          </>
-        ) : null}
+        {lgUp ? <>{/* <Navigation /> */}</> : null}
 
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
@@ -74,16 +79,16 @@ const Header = () => {
           {/* ------------------------------------------- */}
           {/* Ecommerce Dropdown */}
           {/* ------------------------------------------- */}
-          <Cart />
+          {/* <Cart /> */}
           {/* ------------------------------------------- */}
           {/* End Ecommerce Dropdown */}
           {/* ------------------------------------------- */}
 
           <IconButton size="large" color="inherit">
             {activeMode === 'light' ? (
-              <IconMoon size="21" stroke="1.5" onClick={() => setActiveMode("dark")} />
+              <IconMoon size="21" stroke="1.5" onClick={() => setActiveMode('dark')} />
             ) : (
-              <IconSun size="21" stroke="1.5" onClick={() => setActiveMode("light")} />
+              <IconSun size="21" stroke="1.5" onClick={() => setActiveMode('light')} />
             )}
           </IconButton>
 
