@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $monthly = Plan::create([
             'name' => 'Monthly',
-            'price' => 290,
+            'price' => 300,
             'duration_days' => 30,
         ]);
 
