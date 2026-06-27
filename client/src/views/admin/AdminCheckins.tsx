@@ -65,10 +65,14 @@ const AdminCheckins = () => {
     }
   };
 
+  const getMemberFromCheckin = (checkin: CheckinRecord) =>
+    checkin.member ?? members?.find((member) => member.id === checkin.member_id);
+
   const getMemberName = (checkin: CheckinRecord) =>
-    checkin.member?.user.name ||
-    members?.find((member) => member.id === checkin.member_id)?.user.name ||
-    `#${checkin.member_id}`;
+    getMemberFromCheckin(checkin)?.user.name ?? `#${checkin.member_id}`;
+
+  const getMemberNationalId = (checkin: CheckinRecord) =>
+    getMemberFromCheckin(checkin)?.national_id ?? '—';
 
   return (
     <PageContainer title="Check-ins" description="Manage member check-ins">
@@ -158,6 +162,7 @@ const AdminCheckins = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>Member</TableCell>
+                      <TableCell>National ID</TableCell>
                       <TableCell>Checked in at</TableCell>
                     </TableRow>
                   </TableHead>
@@ -166,12 +171,13 @@ const AdminCheckins = () => {
                       checkins.map((checkin) => (
                         <TableRow key={checkin.id} hover>
                           <TableCell>{getMemberName(checkin)}</TableCell>
+                          <TableCell>{getMemberNationalId(checkin)}</TableCell>
                           <TableCell>{formatDateTime(checkin.checked_in_at)}</TableCell>
                         </TableRow>
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={2}>
+                        <TableCell colSpan={3}>
                           <Typography color="textSecondary" align="center" py={2}>
                             No check-ins found.
                           </Typography>
