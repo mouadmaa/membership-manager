@@ -15,7 +15,7 @@ class MemberController extends Controller
             abort(403);
         }
 
-        $query = Member::with('user');
+        $query = Member::with(['user', 'subscriptions']);
 
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {

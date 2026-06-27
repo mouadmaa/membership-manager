@@ -36,9 +36,7 @@ const FullLayout: FC = () => {
     <>
       <LoadingBar />
 
-      <MainWrapper
-        className={activeMode === 'dark' ? 'darkbg mainwrapper' : 'mainwrapper'}
-      >
+      <MainWrapper className={activeMode === 'dark' ? 'darkbg mainwrapper' : 'mainwrapper'}>
         {/* ------------------------------------------- */}
         {/* Sidebar */}
         {/* ------------------------------------------- */}
@@ -49,7 +47,7 @@ const FullLayout: FC = () => {
         <PageWrapper
           className="page-wrapper"
           sx={{
-            ...(isCollapse === "mini-sidebar" && {
+            ...(isCollapse === 'mini-sidebar' && {
               [theme.breakpoints.up('lg')]: { ml: `${MiniSidebarWidth}px` },
             }),
           }}
@@ -62,6 +60,7 @@ const FullLayout: FC = () => {
           {activeLayout === 'horizontal' ? <Navigation /> : ''}
           <Container
             sx={{
+              pt: '2rem',
               maxWidth: isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
           >
@@ -81,7 +80,6 @@ const FullLayout: FC = () => {
         </PageWrapper>
       </MainWrapper>
     </>
-
   );
 };
 

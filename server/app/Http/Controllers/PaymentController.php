@@ -13,7 +13,7 @@ class PaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('subscription');
+        $query = Payment::with(['subscription.plan', 'member.user']);
 
         if ($request->user()->role === 'admin') {
             if ($memberId = $request->query('member_id')) {

@@ -16,6 +16,8 @@ class CheckinController extends Controller
             if ($memberId = $request->query('member_id')) {
                 $query->where('member_id', $memberId);
             }
+
+            $query->with('member.user');
         } else {
             $member = $request->user()->member;
 

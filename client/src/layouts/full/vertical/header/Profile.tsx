@@ -10,11 +10,13 @@ import {
   Stack,
 } from '@mui/material';
 import { IconMail } from '@tabler/icons-react';
+import { useNavigate } from 'react-router';
 import { useAuth } from 'src/context/AuthContext';
 import ProfileImg from 'src/assets/images/profile/user-1.jpg';
 
 const Profile = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,6 +30,7 @@ const Profile = () => {
   const handleLogout = async () => {
     handleClose();
     await logout();
+    navigate('/auth/login');
   };
 
   return (

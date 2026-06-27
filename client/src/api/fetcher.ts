@@ -1,5 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+if (!API_URL) {
+  console.error('VITE_API_URL is not set. Copy .env.example to .env in the client folder.');
+}
+
 export const TOKEN_KEY = 'auth_token';
 
 export class ApiError extends Error {
@@ -54,6 +58,9 @@ async function handleResponse(res: Response) {
 }
 
 function apiUrl(path: string): string {
+  if (!API_URL) {
+    throw new Error('VITE_API_URL is not configured. Copy .env.example to .env');
+  }
   return `${API_URL}${path.startsWith('/') ? path : `/${path}`}`;
 }
 

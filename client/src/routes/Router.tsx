@@ -11,10 +11,10 @@ const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 
 const AdminDashboard = Loadable(lazy(() => import('../views/admin/AdminDashboard')));
-const AdminPlans = Loadable(lazy(() => import('../views/admin/AdminPlaceholders').then((m) => ({ default: m.AdminPlans }))));
-const AdminMembers = Loadable(lazy(() => import('../views/admin/AdminPlaceholders').then((m) => ({ default: m.AdminMembers }))));
-const AdminPayments = Loadable(lazy(() => import('../views/admin/AdminPlaceholders').then((m) => ({ default: m.AdminPayments }))));
-const AdminCheckins = Loadable(lazy(() => import('../views/admin/AdminPlaceholders').then((m) => ({ default: m.AdminCheckins }))));
+const AdminPlans = Loadable(lazy(() => import('../views/admin/AdminPlans')));
+const AdminMembers = Loadable(lazy(() => import('../views/admin/AdminMembers')));
+const AdminPayments = Loadable(lazy(() => import('../views/admin/AdminPayments')));
+const AdminCheckins = Loadable(lazy(() => import('../views/admin/AdminCheckins')));
 
 const MemberDashboard = Loadable(lazy(() => import('../views/member/MemberDashboard')));
 const MemberCheckin = Loadable(lazy(() => import('../views/member/MemberCheckin')));

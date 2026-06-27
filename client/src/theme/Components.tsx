@@ -422,15 +422,36 @@ const components: any = (theme: Theme) => {
             borderColor:
               theme.palette.mode === 'dark' ? theme.palette.grey[200] : theme.palette.grey[300],
           },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline, &:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.primary.main,
-          }
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline, &:hover .MuiOutlinedInput-notchedOutline':
+            {
+              borderColor: theme.palette.primary.main,
+            },
+          '& .MuiSelect-select': {
+            padding: '12px 32px 12px 14px',
+            minHeight: '1.4375em',
+            boxSizing: 'border-box',
+          },
+          '& .MuiSelect-select.MuiInputBase-inputSizeSmall': {
+            padding: '8px 32px 8px 14px',
+          },
         },
         input: {
           padding: '12px 14px',
         },
         inputSizeSmall: {
           padding: '8px 14px',
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            padding: '4px 9px',
+          },
+          '& .MuiOutlinedInput-root.MuiInputBase-sizeSmall': {
+            padding: '2px 6px',
+          },
         },
       },
     },
